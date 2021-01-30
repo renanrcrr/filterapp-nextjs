@@ -46,7 +46,7 @@ app.prepare().then(() => {
   );
   server.use(
     graphQLProxy({
-      version: ApiVersion.October19,
+      version: ApiVersion.October20,//19
     })
   );
   router.get("(.*)", verifyRequest(), async (ctx) => {

@@ -1,9 +1,4 @@
-//import the class with all components react
-import {Component} from 'react';
-
-//When extends from Component this SearchProducts become a component
-class SearchProducts extends Component {
-    render() {
+const SearchProducts = (props) => { 
         return (
             <div className="search-products row justify-content-center my-4">
             <div className="col-md-6">
@@ -13,8 +8,7 @@ class SearchProducts extends Component {
                   type="text"
                   className="form-control"
                   aria-label="Search Products"
-                  /* call method searchPdts sending the value from field */
-                  onChange={e => this.props.searchPdts(e.target.value)}
+                  onChange={e => props.searchPdts(e.target.value)}
                 />
                 <div className="input-group-append">
                   <button
@@ -30,43 +24,42 @@ class SearchProducts extends Component {
                   <div className="sort-menu dropdown-menu dropdown-menu-right">
                     <button className={
                         'sort-by dropdown-item ' + 
-                        (this.props.orderBy === 'productName' ? 'active' : '')
+                        (props.orderBy === 'title' ? 'active' : '')
                     } 
-                    //It calls the method changeOrder when clicked in the filter
-                    onClick={e => this.props.changeOrder('productName', this.props.orderDir)}
+                    onClick={e => props.changeOrder('title', props.orderDir)}
                     href="#">
                       Product 
                     </button>
                     <button className={
                         'sort-by dropdown-item ' + 
-                        (this.props.orderBy === 'registrationDate' ? 'active' : '')
+                        (props.orderBy === 'registrationDate' ? 'active' : '')
                     } 
-                    onClick={e => this.props.changeOrder('registrationDate', this.props.orderDir)}
+                    onClick={e => props.changeOrder('registrationDate', props.orderDir)}
                     href="#">
                       Date
                     </button>
                     <button className={
                         'sort-by dropdown-item ' + 
-                        (this.props.orderBy === 'vendor' ? 'active' : '')
+                        (props.orderBy === 'vendor' ? 'active' : '')
                     } 
-                    onClick={e => this.props.changeOrder('vendor', this.props.orderDir)}
+                    onClick={e => props.changeOrder('vendor', props.orderDir)}
                     href="#">
                       Vendor
                     </button>
                     <div role="separator" className="dropdown-divider" />
                     <button className={
                         'sort-by dropdown-item ' + 
-                        (this.props.orderDir === 'asc' ? 'active' : '')
+                        (props.orderDir === 'asc' ? 'active' : '')
                     } 
-                    onClick={e => this.props.changeOrder(this.props.orderBy, 'asc')}
+                    onClick={e => props.changeOrder(props.orderBy, 'asc')}
                     href="#">
                       Asc
                     </button>
                     <button className={
                         'sort-by dropdown-item ' + 
-                        (this.props.orderDir === 'desc' ? 'active' : '')
+                        (props.orderDir === 'desc' ? 'active' : '')
                     } 
-                    onClick={e => this.props.changeOrder(this.props.orderBy, 'desc')}
+                    onClick={e => props.changeOrder(props.orderBy, 'desc')}
                     href="#">
                       Desc
                     </button>
@@ -76,7 +69,7 @@ class SearchProducts extends Component {
             </div>
           </div>
         );
-    }
+    
 }
 
 export default SearchProducts;

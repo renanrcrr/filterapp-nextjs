@@ -1,6 +1,6 @@
-const Product = (props) => {
+const ListProducts = (props) => {
     const variantImage = props.product.images.edges[0];
-    const variant = props.product.variants.edges[0].node;
+    const firstVariant = props.product.variants.edges[0].node;
 
     return (
         <div className="Product">
@@ -9,9 +9,10 @@ const Product = (props) => {
                     alt={`${variantImage.node.altText}`} width="100px"/>
                 : null}  
             <h5 className="Product__title">{props.product.title}</h5>
-            <span className="Product__price">${variant.price}</span>
+            <span className="Product__price">${firstVariant.price}</span>
+            <span className="Product__vendor">{props.product.vendor}</span>
         </div>
     );
 }
  
-export default Product;
+export default ListProducts;

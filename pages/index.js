@@ -1,57 +1,60 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
-import Product from './components/Product';
-import SearchProducts from './components/SearchProducts';
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/app.css';
+import {gql} from 'apollo-boost';
+import ListProducts from './components/ListProducts';
+import SearchProducts from './components/SearchProducts';
+import {useQuery} from '@apollo/react-hooks';
 
-const query = gql`
-  query query {
+const GET_PRODUCTS = gql` 
+  query {
     shop {
-    name
-    description
-    products(first: 12) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
-      edges {
-        node {
-          id
-          title
-          options {
-            name
-            values
-          }
-          variants(first: 12) {
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
+      id
+      name
+      description
+      products(first: 36) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        } 
+        edges {
+          node {
+            id
+            title
+            vendor
+            options {
+              name
+              values
             }
-            edges {
-              node {
-                title
-                selectedOptions {
-                  name
-                  value
+            variants(first: 5) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+              }
+              edges {
+                node {
+                  title
+                  selectedOptions {
+                    name
+                    value
+                  }
+                  image {
+                    src
+                  }
+                  price
                 }
-                image {
-                  src
-                }
-                price
               }
             }
-          }
-          images(first: 1) {
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-            }
-            edges {
-              node {
-                altText
-                originalSrc
+            images(first: 1) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+              }
+              edges {
+                node {
+                  altText
+                  originalSrc
+                }
               }
             }
           }
@@ -59,91 +62,67 @@ const query = gql`
       }
     }
   }
-}
+` 
 
-`; 
-
-const Index = () => {    
-  const { loading:shopLoading, error:shopError, data:shopData } = useQuery(query);
-  const [orderBy, setOrderBy] = useState('productName');//shopData.shop.products.edges.node.title
+export default function Index() { 
+  const {loading, error, data} = useQuery(GET_PRODUCTS);
   const [orderDir, setOrderDir] = useState('asc');
+  const [orderBy, setOrderBy] = useState('title');
   const [queryText, setQueryText] = useState('');
-  const [hidden, setHidden] = useState(true);
-  // const [arrayProducts, setMyProducts] = useState([]);
-  let order, filteredPdts = [];
+  let pdtsFiltered = [];
+  let order;
   
-  // Is shop undefined by console? Why? (Sometimes happen sometimes not)
-  // console.log("Obj Shop: " + shopData.shop); 
+  if (loading) {
+    return (
+      <p>Loading...</p>
+    );
+  }
+    
+  if (error) {
+    return (
+      <p>Error</p>
+    );
+  }
   
-  // Edges = is an array of objects ?
-  // console.log("Obj Edges: " + shopData.shop.products.edges);
-
-  filteredPdts.push(shopData.shop.products.edges);
-  
-  console.log("Obj products: " + filteredPdts);
-
-  // filteredPdts = arrayProducts;
-
-  //My Old code below
-
-  // filteredPdts = filteredPdts.sort((a, b) => {
-  //     if(a[orderBy].toLowerCase() <
-  //       b[orderBy].toLowerCase()
-  //       ){
-  //         return -1 * order;
-  //       } else {
-  //         return 1 * order;
-  //       }
-  //   })
-    // .filter(eachItem => {
-    //   return (
-    //     eachItem['title']
-    //     .toLowerCase()
-    //     .includes(queryText.toLowerCase()) ||
-    //     eachItem['vendor']
-    //     .toLowerCase()
-    //     .includes(queryText.toLowerCase()) ||
-    //     eachItem['price']
-    //     .toLowerCase()
-    //     .includes(queryText.toLowerCase())
-    //   )
-    // })
-    //;
-
   if(orderDir === 'asc'){
     order = 1;
   } else {
     order = -1;
   }
 
-  if (shopLoading) {
-    return <p>Loading...</p>;
-  }  
-  if (shopError) {
-    return <p>{shopError.message}</p>;
-  }
-
-  function changeOrder(order, dir) {
+  function changeOrder(order, dir){
     setOrderBy(order);
     setOrderDir(dir);
   }
 
-  function searchPdts() {
-    setQueryText(queryText);
+  function searchPdts(query){
+    setQueryText(query);
   }
-
-  function handleOpenCloseDropdown() {
-    setHidden(!hidden);
-  }
-
   
+  for(var x=0; x<36; x++){//[data.shop.products.edges].length ?
+    pdtsFiltered.push(data.shop.products.edges[x]);
+    // console.log("Product title (original list): ", pdtsFiltered[x].node.title);
+  }
+  
+  pdtsFiltered = pdtsFiltered.sort((a, b) => {
+    if(a.node[orderBy] < b.node[orderBy]){
+      return -1 * order;
+    } else {
+      return 1 * order;
+    }
+  })
+  .filter(eachItem => {
+    return (
+      eachItem.node.title.toLowerCase().includes(queryText.toLowerCase()) ||
+      eachItem.node.vendor.toLowerCase().includes(queryText.toLowerCase()) 
+    );
+  });  
 
   return (
     <div className="App">
       <header className="App__header">
         <div className="App__title">
-          <h1>{shopData.shop.name}: Filter App - Version 3.0</h1>
-          <h2>{shopData.shop.description}</h2>
+          <h1>{data.shop.name}: Filter App - Version 3.0</h1>
         </div>
       </header>
       <main className="page bg-white" id="petratings">
@@ -156,14 +135,12 @@ const Index = () => {
                   orderDir={orderDir}
                   changeOrder={changeOrder}
                   searchPdts={searchPdts}
-                  handleOpenCloseDropdown={handleOpenCloseDropdown}
-                  hidden={hidden}
                 />
 
                 <div className="Product-wrapper">
                   { 
-                    shopData.shop.products.edges.map(product => 
-                      <Product 
+                    pdtsFiltered.map(product => 
+                      <ListProducts 
                         key={product.node.id.toString()} 
                         product={product.node} 
                       />
@@ -177,12 +154,18 @@ const Index = () => {
       </main>
       <footer className="container d-flex text-white py-2">
         <p>
-          All contents &copy; 2020 -
+          All contents &copy; 2021 -
           <a href="#">Image Direct</a> - All rights reserved.
         </p>
       </footer>
     </div>  
   );
 }
+
  
-export default Index;
+
+
+// JSON - Script
+// "dev": "cross-env NODE_ENV=development nodemon ./server/index.js --watch ./server/index.js",
+//     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
+//     "start": "cross-env NODE_ENV=production node ./server/index.js"

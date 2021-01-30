@@ -1,6 +1,4 @@
-/* INITIALIZERS + DEFAULTS
- * ============================== */
- @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700');
+ /* @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700');
 
  *, *:before, *:after {
    box-sizing: border-box;
@@ -33,7 +31,7 @@
    font-weight: 300;
    margin: 0;
    font-size: 2rem;
- }
+ } */
  
  /* BASE APP
   * ============================== */
@@ -92,6 +90,13 @@
    margin-bottom: 0.4rem;
    opacity: 1;
  }
+
+ .Product__vendor {
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+  opacity: 2;
+}
  
  .Product__price {
    display: block;
