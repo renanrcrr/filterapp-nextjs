@@ -98,13 +98,8 @@ export default function Index() {
   function searchPdts(query){
     setQueryText(query);
   }
-  
-  for(var x=0; x<36; x++){//[data.shop.products.edges].length ?
-    pdtsFiltered.push(data.shop.products.edges[x]);
-    // console.log("Product title (original list): ", pdtsFiltered[x].node.title);
-  }
-  
-  pdtsFiltered = pdtsFiltered.sort((a, b) => {
+
+  pdtsFiltered = data.shop.products.edges.sort((a, b) => {
     if(a.node[orderBy] < b.node[orderBy]){
       return -1 * order;
     } else {

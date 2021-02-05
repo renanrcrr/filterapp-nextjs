@@ -17,32 +17,3 @@ export const createClient = (shop, accessToken) => {
     }
   });
 }
-
-
-// export async function getStaticProps(){
-  
-//   const { data } = await createClient.query({
-//     query: gql`
-//       query Shop {
-//         shop {
-//           id
-//           name
-//           description
-//         }
-//       }
-//     ` 
-//   });
-
-//   console.log("data: ", data);
-
-//   return {
-//     props: {
-//       dataShop: []
-//     }
-//   }
-// }
-
-// export default function getProps({DataLaunches}){
-//   console.log("DataLaunches array: ", DataLaunches);
-//   return DataLaunches;//Array vazio
-// }
