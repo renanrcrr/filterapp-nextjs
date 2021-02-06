@@ -2,9 +2,6 @@
   "name": "shopify-app-node",
   "version": "4.0.0",
   "description": "Shopify's node app for CLI tool",
-  "engines": {
-    "node": "12.19.0"
-  },
   "scripts": {
     "test": "jest",
     "dev": "cross-env NODE_ENV=development nodemon ./server/index.js --watch ./server/index.js",
