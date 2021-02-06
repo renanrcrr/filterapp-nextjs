@@ -2,12 +2,15 @@
   "name": "shopify-app-node",
   "version": "4.0.0",
   "description": "Shopify's node app for CLI tool",
+  "engines": {
+    "node": "12.19.0"
+  },
   "scripts": {
     "test": "jest",
     "dev": "cross-env NODE_ENV=development nodemon ./server/index.js --watch ./server/index.js",
     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "cross-env NODE_ENV=production node ./server/index.js",
-    "heroku-postbuild": "npm run build"
+    "export": "npm run build && next export && mv out _static"
   },
   "repository": {
     "type": "git",
